@@ -54,9 +54,6 @@ public class Maze {
             }
         }
         printMaze();
-        Stack<Location> solution = findPath();
-        System.out.println(solution);
-        System.out.println(validatePath(solution));
     }
 
     public void draw(){
@@ -105,20 +102,11 @@ public class Maze {
         return n;
     }
 
-    public void highLightPath(){
-        ShapeRenderer shapeRenderer = new ShapeRenderer();
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(255,0, 0, 1);
-        for (int i = 0; i < endPath.size(); i++) {
-            Location curr = endPath.get(i);
-            shapeRenderer.circle((curr.col*30 + 15), SCREEN_HEIGHT -27 -(curr.row*26 -13), 5);
-        }
-        shapeRenderer.end();
-    }
 
 
-    public Stack<Location> findPath(){
+    public ArrayList<Stack<Location>> findPaths(){
         Stack<Location> path;
+        ArrayList<Stack<Location>> allPaths = new ArrayList<>();
         Queue<Stack<Location>> possiblePaths;
         possiblePaths = new LinkedList<>();
         Stack<Location> first = new Stack<>();
@@ -130,6 +118,7 @@ public class Maze {
                 possiblePaths.offer(first);
             }
             path = possiblePaths.poll();
+            allPaths.add(allPaths.size(), path);
             endPath = copyStack(path);
             if(path.peek().col == maze[0].length - 1 && path.peek().row == maze.length - 1){
                 break;
@@ -147,7 +136,7 @@ public class Maze {
                 possiblePaths.offer(nextPath);
             }
         }
-        return path;
+        return allPaths;
     }
 
     public boolean isValid(Location loc){

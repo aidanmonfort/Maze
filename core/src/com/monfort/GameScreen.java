@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.awt.*;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Stack;
 
 public class GameScreen implements Screen {
@@ -35,6 +36,8 @@ public class GameScreen implements Screen {
     private Camera camera;
 
     private Maze m;
+    private ArrayList<Stack<Location>> solutions;
+    private int index = 0;
 
     //control how the camera views the world
     //zoom in/out? Keep everything scaled?
@@ -44,6 +47,7 @@ public class GameScreen implements Screen {
 
     public GameScreen() throws FileNotFoundException {
         this.m = new Maze("assets/res/21x23.maze", WORLD_HEIGHT, WORLD_WIDTH);
+        this.solutions = m.findPaths();
     }
 
     public void clearScreen(){
@@ -66,25 +70,32 @@ public class GameScreen implements Screen {
         shapeRenderer.setAutoShapeType(true); //???, I just know that this was the solution to an annoying problem
     }
 
-
+    public void highLightPath(Stack<Location> path){
+        ShapeRenderer shapeRenderer = new ShapeRenderer();
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(255,0, 0, 1);
+        for (int i = 0; i < path.size(); i++) {
+            Location curr = path.get(i);
+            shapeRenderer.circle((curr.col*30 + 15), WORLD_HEIGHT -27 -(curr.row*26 -13), 5);
+        }
+        shapeRenderer.end();
+    }
 
     @Override
     public void render(float delta) {
-        m.printMaze();
-        Stack<Location> solution = m.findPath();
-        System.out.println(solution);
-        System.out.println(m.validatePath(solution));
-
         spriteBatch.begin();
         m.draw();
-        m.highLightPath();
+        highLightPath(solutions.get(index));
         try{
-            Thread.sleep(1000);
+            Thread.sleep(1);
         }
         catch (InterruptedException e){
             throw new RuntimeException(e);
         }
         spriteBatch.end();
+        if (index < solutions.size() - 1){
+            index++;
+        }
     }
 
     @Override
