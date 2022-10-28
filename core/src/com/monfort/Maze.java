@@ -28,7 +28,9 @@ class Location{
 public class Maze {
     private boolean[][] maze;
 
-    public static Stack<Location> endPath;
+    private static Stack<Location> endPath;
+    private int rows, cols;
+
 
     float SCREEN_WIDTH, SCREEN_HEIGHT;
 
@@ -47,6 +49,8 @@ public class Maze {
         }
         int rows = lines.size();
         int cols = lines.get(0).length();
+        this.rows = rows;
+        this.cols = cols;
         maze = new boolean[rows][cols];
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
@@ -62,8 +66,8 @@ public class Maze {
         shapeRenderer.setColor(140,150, 140, 1);
         shapeRenderer.rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
         shapeRenderer.setColor(0, 0, 0, 1);
-        float boxWidth = 30;
-        float boxHeight = 26;
+        float boxWidth = SCREEN_WIDTH/cols;
+        float boxHeight = SCREEN_HEIGHT/rows;
         for(int i = 0; i < maze.length; i++){
             for (int j = 0; j < maze[i].length; j++) {
                 if (maze[i][j]){
@@ -201,5 +205,13 @@ public class Maze {
             }
             System.out.println();
         }
+    }
+
+    public int getRows() {
+        return rows;
+    }
+
+    public int getCols() {
+        return cols;
     }
 }

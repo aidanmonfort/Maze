@@ -46,7 +46,7 @@ public class GameScreen implements Screen {
     BitmapFont tempFont = new BitmapFont();
 
     public GameScreen() throws FileNotFoundException {
-        this.m = new Maze("assets/res/21x23.maze", WORLD_HEIGHT, WORLD_WIDTH);
+        this.m = new Maze("assets/res/21x25.maze", WORLD_HEIGHT, WORLD_WIDTH);
         this.solutions = m.findPaths();
     }
 
@@ -74,9 +74,11 @@ public class GameScreen implements Screen {
         ShapeRenderer shapeRenderer = new ShapeRenderer();
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(255,0, 0, 1);
+        float height = WORLD_HEIGHT/m.getRows();
+        float width = WORLD_WIDTH/m.getCols();
         for (int i = 0; i < path.size(); i++) {
             Location curr = path.get(i);
-            shapeRenderer.circle((curr.col*30 + 15), WORLD_HEIGHT -27 -(curr.row*26 -13), 5);
+            shapeRenderer.circle((curr.col*width + width/2), WORLD_HEIGHT -27 -(curr.row*height -height/2), 5);
         }
         shapeRenderer.end();
     }
@@ -87,7 +89,7 @@ public class GameScreen implements Screen {
         m.draw();
         highLightPath(solutions.get(index));
         try{
-            Thread.sleep(1);
+            Thread.sleep(100);
         }
         catch (InterruptedException e){
             throw new RuntimeException(e);
